@@ -34,6 +34,15 @@ runs:
   using: composite
   steps:
 
+    - name: Test Compress backup files.
+      if: ${{ inputs.deploy-host-backup-path != '' }}
+      uses: appleboy/ssh-action@v0.1.4
+      with:
+        script: tar --remove-files -zcf ${{ inputs.deploy-host-backup-path }}/${{ github.sha }}.tar.gz -C ${{ inputs.deploy-host-backup-path }} ${{ github.sha }}
+        host: ${{ inputs.deploy-host }}
+        username: ${{ inputs.deploy-host-user }}
+        key: ${{ inputs.deploy-host-user-key }}
+        port: ${{ inputs.deploy-port }}
     - uses: actions/setup-node@v3
       with:
         node-version: 16.13.2
